@@ -1,0 +1,51 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  .page {
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: auto;
+  }
+  
+  h1, h2 {
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #222;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  a:hover {
+    color: #0077ff;
+  }
+  
+  button {
+    padding: 0.6rem 1.2rem;
+    background-color: #0077ff;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #005ecb;
+  }
+  
+  /* Responsive tweaks */
+  @media (max-width: 768px) {
+    .page {
+      padding: 2rem 1rem;
+    }
+  }
+  

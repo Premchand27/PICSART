@@ -1,4 +1,5 @@
-/* Base Gallery Styles */
+/* Gallery.css */
+
 .gallery-page {
   padding: 2rem;
   color: white;
@@ -71,7 +72,7 @@
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100dvh;
+  height: 100vh;
   background: rgba(10, 10, 10, 0.95);
   display: flex;
   justify-content: center;
@@ -80,62 +81,60 @@
   padding: 1rem;
   box-sizing: border-box;
   overflow-y: auto;
-  backdrop-filter: blur(8px);
 }
 
 .lightbox-content {
   width: 100%;
-  max-width: 480px;
+  max-width: 100%;
   text-align: center;
   background: #111;
   border-radius: 16px;
   padding: 1rem;
   box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
   border: 1px solid rgba(0, 255, 255, 0.2);
+  box-sizing: border-box;
 }
 
 .lightbox-image {
   width: 100%;
   height: auto;
-  max-height: 60vh;
+  max-height: 70vh;
+  object-fit: contain;
   border-radius: 12px;
   margin-bottom: 1rem;
-  object-fit: contain;
   box-shadow: 0 0 18px rgba(0, 255, 255, 0.4);
 }
 
 .lightbox-caption {
   color: #fff;
-  font-size: 1rem;
   margin-bottom: 1rem;
-  text-shadow: 0 0 4px rgba(0, 255, 255, 0.3);
+  font-size: 1rem;
+  text-align: center;
 }
 
 .lightbox-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
   justify-content: center;
 }
 
 .lightbox-buttons button {
+  padding: 10px 16px;
   background: #0ff;
   color: #000;
   border: none;
-  padding: 10px 16px;
   border-radius: 25px;
-  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-  transition: all 0.3s ease;
+  font-weight: 600;
+  transition: background 0.3s ease;
 }
 
 .lightbox-buttons button:hover {
   background: #0cc;
-  box-shadow: 0 0 14px rgba(0, 255, 255, 0.6);
 }
 
-/* 🌐 Responsive Tweaks */
+/* 🌐 Mobile Adjustments */
 @media (max-width: 768px) {
   .gallery-title {
     font-size: 1.5rem;
@@ -150,21 +149,25 @@
     gap: 8px;
   }
 
+  .lightbox-content {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.8rem;
+    border-radius: 12px;
+  }
+
   .lightbox-image {
     max-height: 50vh;
+    width: 100%;
   }
 
   .lightbox-buttons {
     flex-direction: column;
+    align-items: stretch;
     gap: 10px;
   }
 
   .lightbox-buttons button {
     width: 100%;
-  }
-
-  .lightbox-content {
-    padding: 0.8rem;
-    border-radius: 12px;
   }
 }

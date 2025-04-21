@@ -1,116 +1,163 @@
-import React, { useState } from 'react';
+// src/components/Gallery.js
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './Gallery.css';
 
+const images = [
+  {
+    src: 'https://plus.unsplash.com/premium_photo-1668024966086-bd66ba04262f?fm=jpg&q=60&w=3000',
+    caption: 'Sunset over the hills',
+    category: 'Nature',
+  },
+  {
+    src: 'https://plus.unsplash.com/premium_photo-1668024966086-bd66ba04262f?fm=jpg&q=60&w=3000',
+    caption: 'Mountain adventure',
+    category: 'Adventure',
+  },
+  {
+    src: 'https://plus.unsplash.com/premium_photo-1668024966086-bd66ba04262f?fm=jpg&q=60&w=3000',
+    caption: 'City nightscape',
+    category: 'City',
+  },
+  {
+    src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9w72z8uAaEbm6EgBemhR90f7tw1U6KNA6tPIJrEYRUhW6IivYWvwoR9jTgY_bzNfIay8&usqp=CAU',
+    caption: 'Urban vibes',
+    category: 'City',
+  }
+];
+
+const categories = ['All', ...new Set(images.map(img => img.category))];
+
 const Gallery = () => {
-  const categories = ['All', 'Nature', 'Urban'];
-
-  const images = [
-    {
-      src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzCLHmIN0gTgERisY6t0EPogYa_mGfO0ZecQ&s',
-      category: 'Nature',
-      caption: 'Tranquil Forest'
-    },
-    {
-      src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzCLHmIN0gTgERisY6t0EPogYa_mGfO0ZecQ&s',
-      category: 'Urban',
-      caption: 'City Skyline'
-    },
-    {
-      src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzCLHmIN0gTgERisY6t0EPogYa_mGfO0ZecQ&s',
-      category: 'Nature',
-      caption: 'Mountain Morning'
-    },
-    {
-      src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzCLHmIN0gTgERisY6t0EPogYa_mGfO0ZecQ&s',
-      category: 'Urban',
-      caption: 'Downtown Lights'
-    }
-  ];
-
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [lightboxImg, setLightboxImg] = useState(null);
-  const [lightboxData, setLightboxData] = useState({});
+  const [lightboxCaption, setLightboxCaption] = useState('');
+  const touchStartY = useRef(0);
 
-  const filteredImages =
-    selectedCategory === 'All'
-      ? images
-      : images.filter(img => img.category === selectedCategory);
+  const filteredImages = selectedCategory === 'All'
+    ? images
+    : images.filter(img => img.category === selectedCategory);
 
-  const handleDownload = () => {
-    const link = document.createElement('a');
-    link.href = lightboxImg;
-    link.download = 'image.jpg';
-    link.click();
+  const openLightbox = (img, caption) => {
+    setLightboxImg(img);
+    setLightboxCaption(caption);
   };
 
-  const handleCopyCaption = () => {
-    navigator.clipboard.writeText(lightboxData.caption);
-    alert('Caption copied!');
+  const handleClose = () => setLightboxImg(null);
+
+  const handleSave = () => {
+    const a = document.createElement('a');
+    a.href = lightboxImg;
+    a.download = 'gallery-image';
+    a.click();
   };
 
-  const handleViewOriginal = () => {
-    window.open(lightboxImg, '_blank');
+  const handleLike = () => {
+    console.log('Liked image:', lightboxImg);
   };
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      await navigator.share({
+        title: 'Gallery Image',
+        url: lightboxImg,
+      });
+    } else {
+      navigator.clipboard.writeText(lightboxImg);
+      alert('Image URL copied to clipboard!');
+    }
+  };
+
+  const handleTouchStart = (e) => {
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e) => {
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+    if (deltaY > 80) handleClose();
+  };
+
+  useEffect(() => {
+    if (lightboxImg) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('touchstart', handleTouchStart);
+      window.addEventListener('touchend', handleTouchEnd);
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [lightboxImg]);
 
   return (
-    <motion.div className="gallery-page" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
-      <h2 className="gallery-title">📸 Gallery</h2>
-
-      <div className="filters">
-        {categories.map(category => (
+    <div className="gallery-wrapper">
+      <div className="category-buttons">
+        {categories.map((cat, idx) => (
           <button
-            key={category}
-            className={selectedCategory === category ? 'active' : ''}
-            onClick={() => setSelectedCategory(category)}
+            key={idx}
+            className={selectedCategory === cat ? 'active' : ''}
+            onClick={() => setSelectedCategory(cat)}
           >
-            {category}
+            {cat}
           </button>
         ))}
       </div>
 
-      <motion.div className="image-grid" initial="hidden" animate="visible">
-        {filteredImages.map((img, index) => (
-          <motion.div className="image-item" key={index} whileHover={{ scale: 1.05 }}>
-            <img
+      <motion.div layout className="gallery-grid">
+        <AnimatePresence>
+          {filteredImages.map((img, idx) => (
+            <motion.img
+              key={idx}
               src={img.src}
               alt={img.caption}
-              onClick={() => {
-                setLightboxImg(img.src);
-                setLightboxData(img);
-              }}
-              loading="lazy"
+              className="gallery-image"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+              layout
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.4 }}
+              onClick={() => openLightbox(img.src, img.caption)}
             />
-            <div className="caption">{img.caption}</div>
-          </motion.div>
-        ))}
+          ))}
+        </AnimatePresence>
       </motion.div>
 
       <AnimatePresence>
         {lightboxImg && (
-          <motion.div className="lightbox" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <div className="lightbox-content">
+          <div className="custom-lightbox-overlay" onClick={handleClose}>
+            <motion.div
+              className="custom-lightbox-container"
+              onClick={(e) => e.stopPropagation()}
+              initial={{ scale: 0.85, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.85, opacity: 0 }}
+              transition={{ duration: 0.4 }}
+            >
               <motion.img
                 src={lightboxImg}
-                alt="Preview"
-                className="lightbox-image"
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                transition={{ duration: 0.3 }}
+                alt="Expanded"
+                className="custom-lightbox-image"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4 }}
               />
-              <div className="lightbox-caption">{lightboxData.caption}</div>
-              <div className="lightbox-buttons">
-                <button onClick={handleViewOriginal}>🔍 View Original</button>
-                <button onClick={handleDownload}>💾 Download</button>
-                <button onClick={handleCopyCaption}>📋 Copy Caption</button>
-                <button onClick={() => setLightboxImg(null)}>↩️ Back</button>
+              <div className="custom-lightbox-caption">{lightboxCaption}</div>
+              <div className="custom-lightbox-buttons">
+                <button onClick={() => window.open(lightboxImg, '_blank')}>🔍 View Original</button>
+                <button onClick={handleSave}>💾 Save</button>
+                <button onClick={handleLike}>❤️ Like</button>
+                <button onClick={handleShare}>🔗 Share</button>
+                <button onClick={handleClose}>❌ Close</button>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 };
 

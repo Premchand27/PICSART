@@ -1,81 +1,170 @@
-/* src/styles/Home.css */
+/* Global Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #121212; /* Dark background */
+  color: #fff;
+  overflow-x: hidden;
+  transition: all 0.3s ease; /* Smooth transitions */
+}
+
+/* Main Slider Container */
 .home-slider {
-    width: 100%;
-    height: 100vh;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden; /* Hide overflow for smooth animations */
+}
+
+/* Enhanced Slide Styling */
+.enhanced-slide {
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.6s ease-in-out;
+  will-change: transform;
+}
+
+.enhanced-slide:hover {
+  transform: scale(1.05); /* Slight zoom-in effect on hover */
+}
+
+/* Gradient Overlay */
+.slide-dark-overlay {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)); /* Dark gradient overlay */
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease-in-out;
+}
+
+/* Slide Text Styling */
+.slide-text {
+  text-align: center;
+  max-width: 800px;
+  animation: fadeInUp 1.5s ease-out;
+  padding: 0 20px;
+  z-index: 1;
+  position: relative;
+}
+
+/* Heading Styling */
+.slide-text h1 {
+  font-size: 4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #ffdd57; /* Golden yellow */
+  letter-spacing: 4px;
+  margin-bottom: 15px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.slide-text h1:hover {
+  transform: translateY(-5px); /* Slight hover effect */
+  opacity: 0.9;
+}
+
+/* Description Paragraph Styling */
+.slide-text p {
+  font-size: 1.3rem;
+  line-height: 1.8;
+  color: #e0e0e0;
+  max-width: 700px;
+  margin: 0 auto;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.slide-text p:hover {
+  transform: translateY(5px); /* Hover effect on text */
+  opacity: 0.8;
+}
+
+/* Carousel Dots Styling */
+.slick-dots {
+  bottom: 30px;
+  z-index: 10;
+}
+
+.slick-dots li button:before {
+  font-size: 12px;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.slick-dots li.slick-active button:before {
+  color: #ffdd57;
+  transform: scale(1.4); /* Active dot enlarges */
+}
+
+/* Hover Effects on Carousel Dots */
+.slick-dots li:hover button:before {
+  color: #ffdd57;
+  transform: scale(1.5); /* Enlarge dot on hover */
+}
+
+/* Text Animation on Slide */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
   }
-  
-  .enhanced-slide {
-    height: 100vh;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .slide-dark-overlay {
-    background-color: rgba(0, 0, 0, 0.6);
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .slide-text {
-    text-align: center;
-    max-width: 700px;
-    animation: fadeInUp 1.2s ease-in-out;
-    padding: 20px;
-  }
-  
-  /* 🌟 Highlighted Colors */
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
   .slide-text h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-    font-weight: bold;
-    color: #ffdd57; /* golden yellow */
+    font-size: 2.5rem;
   }
-  
+
   .slide-text p {
-    font-size: 1.2rem;
-    line-height: 1.6;
-    color: #e0e0e0; /* soft white */
+    font-size: 1.1rem;
   }
-  
-  /* Dots */
-  .slick-dots li button:before {
-    font-size: 10px;
-    color: white;
+
+  .slick-dots {
+    bottom: 20px; /* Adjust dot position */
   }
-  .slick-dots li.slick-active button:before {
-    color: #ffdd57;
-  }
-  
-  /* Text Animation */
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(40px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* Mobile Responsive */
-  @media (max-width: 768px) {
-    .slide-text h1 {
-      font-size: 2rem;
-    }
-  
-    .slide-text p {
-      font-size: 1rem;
-    }
-  }
-  
+}
+
+/* Footer Styling */
+footer {
+  background-color: #222;
+  padding: 40px 0;
+  text-align: center;
+  color: #aaa;
+  font-size: 0.9rem;
+  transition: background 0.3s ease-in-out;
+}
+
+footer a {
+  color: #ffdd57;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+  transform: scale(1.1); /* Hover effect on footer links */
+  transition: transform 0.2s ease;
+}
+
+/* Section Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
+}
